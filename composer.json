@@ -1,0 +1,34 @@
+{
+    "name": "xiaoming/wechat_v3_pay",
+    "version": "1.0.0",
+    "description": "wechat pay version 3",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xiaoming",
+            "email": "honghua1207@sina.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-openssl":"*",
+        "wechatpay/wechatpay-guzzle-middleware": "^0.2.0",
+        "monolog/monolog": "^2.2",
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/http-foundation": "^4.0 || ^5.0.7",
+        "symfony/event-dispatcher": "^4.0 || ^5.0",
+        "phpunit/phpunit": "^8.5"
+    },
+    "require-dev": {
+        "wechatpay/wechatpay-guzzle-middleware": "^0.2.0"
+    },
+    "autoload": {
+        "psr-4": { "Xiaoming\\Wechatpay\\" : "src/" }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    ]
+}
