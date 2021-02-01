@@ -11,7 +11,7 @@
 
 # 使用方法
 
-    composer require xiaoming/wechat_v3_pay
+    composer require xming/wechat_v3_pay
 
 ```php
     use Xiaoming\Wechatpay\Config;
