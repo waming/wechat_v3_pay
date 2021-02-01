@@ -12,6 +12,17 @@
 
 3.接受异步回调
 
+## 支持的支付方法
+- 手机网站支付
+- jspay支付
+- 获取平台证书
+
+|  method   |   描述       |
+| :-------: | :-------:   |
+|  h5PayOrder  | 手机网站支付 |
+|  jsPayOrder   | jspay支付   |
+|  getCertFile | 获取平台证书 |
+
 # 使用方法
 
     composer require xming/wechat_v3_pay
@@ -58,7 +69,9 @@
 ```
 # 问题
 1.若何获取平台证书？
+
 https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
+或者使用系统封装方法获取
 
 
 # 感谢
