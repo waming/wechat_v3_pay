@@ -34,6 +34,17 @@ abstract class BaseRequest {
      */
     private $amount;
 
+    /**
+     * 扩展参数，用户自定义
+     */
+    private $extendData = [];
+
+    /**
+     * 设置其他参数，用于扩展
+     */
+    public function setExtendData($data = []) {
+        $this->extendData = $data;
+    }
 
     public function setAppId($appId = '') {
         $this->appId  = $appId;
@@ -83,5 +94,9 @@ abstract class BaseRequest {
 
     public function getAmount() {
         return $this->amount;
+    }
+
+    public function getExtendData() {
+        return $this->extendData;
     }
 }

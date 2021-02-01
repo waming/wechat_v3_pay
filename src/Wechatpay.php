@@ -11,16 +11,23 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Xiaoming\Wechatpay\Request\WapPayRequest;
 use GuzzleHttp\Exception\RequestException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use NoopValidator;
+use Symfony\Component\HttpFoundation\Request;
 use WechatPay\GuzzleMiddleware\Util\AesUtil;
 
 class WechatPay {
 
     private $config;
+    
+    private $logger;
 
     public function __construct(Config $config)
     {
-        $this->config = $config;        
+        $this->config = $config;
+        $this->logger = new Logger('wechat');
+        $this->logger->pushHandler(new StreamHandler($config->getLoggerPath()), Logger::WARNING);
     }
 
     /**
@@ -65,17 +72,10 @@ class WechatPay {
             return $result;
         
         } catch (RequestException $e) {
-            // 进行错误处理
-            echo $e->getMessage()."\n";
-            if ($e->hasResponse()) {
-                echo $e->getResponse()->getStatusCode().' '.$e->getResponse()->getReasonPhrase()."\n";
-                echo $e->getResponse()->getBody();
-            }
-            // throw new \RuntimeException($e->getMessage());
-            // return;
+           
+            throw new \RuntimeException($e->getMessage());
         }
     }
-
 
     /**
      * jspay 统一下单接口
@@ -98,13 +98,6 @@ class WechatPay {
         
         } catch (RequestException $e) {
             throw new \RuntimeException($e->getMessage());
-            // 进行错误处理
-            // echo $e->getMessage()."\n";
-            // if ($e->hasResponse()) {
-            //     echo $e->getResponse()->getStatusCode().' '.$e->getResponse()->getReasonPhrase()."\n";
-            //     echo $e->getResponse()->getBody();
-            // }
-            // return;
         }
     }
 
@@ -154,13 +147,55 @@ class WechatPay {
             echo $ciphertext;
         } catch (RequestException $e) {
             throw new \RuntimeException($e->getMessage());
-            // // 进行错误处理
-            // echo $e->getMessage()."\n";
-            // if ($e->hasResponse()) {
-            //     echo $e->getResponse()->getStatusCode().' '.$e->getResponse()->getReasonPhrase()."\n";
-            //     echo $e->getResponse()->getBody();
-            // }
-            // return;
+           
+        } 
+    }
+
+    /**
+     * 接受异步通知
+     */
+    public function notify() : array
+    {
+        $request = Request::createFromGlobals();
+
+        //检查平台证书序列号
+        if($request->headers->get("wechatpay-serial") != $this->config->getPlatformSerialNumber()) {
+            $this->logger->addRecord(200, "error, 平台证书检擦不通过");
+            return [];
+        }
+
+        //验证签名
+        $signData = [];
+        $signData['timestamp'] = $request->headers->get("wechatpay-timestamp");
+        $signData['nonce']     = $request->headers->get("wechatpay-nonce");
+        $signData['content']   = $request->getContent();
+
+        $sign_str = $signData['timestamp']."\n".$signData['nonce']."\n".$signData['content']."\n"; //验证签名字符串
+        
+        //获取应答签名
+        $signature = base64_decode($request->headers->get("wechatpay-signature"));
+
+        try {
+
+            //获取平台公钥
+            $publicKey = openssl_pkey_get_public(file_get_contents($this->config->getPlatformCertPath()));
+            $retCode = openssl_verify($sign_str, $signature, $publicKey, OPENSSL_ALGO_SHA256);
+
+            if($retCode != 1) {
+                $this->logger->addRecord(200, "error, 签名错误");
+                return [];
+            }
+
+            //对商户resource对象解密
+            $data = json_decode($signData['content'], true);
+            $aesUtil = new AesUtil($this->config->getV3Key());
+            $ciphertext = $aesUtil->decryptToString($data['resource']['associated_data'], 
+            $data['resource']['nonce'],        
+            $data['resource']['ciphertext']);
+
+            return json_decode($ciphertext, true);
+        } catch (RequestException $e) {
+            throw new \RuntimeException($e->getMessage());
         } 
     }
 }

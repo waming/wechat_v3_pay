@@ -42,6 +42,6 @@ class WapPayRequest extends BaseRequest implements RequestInterface {
             ]
         ];
 
-        return $data;
+        return array_merge($data, $this->getExtendData());
     }
 }

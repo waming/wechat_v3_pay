@@ -42,6 +42,11 @@ class Config {
      */
     private $plateformCertSerialNumber;
 
+    /**
+     * 配置日志保存路径
+     */
+    private $loggerPath;
+
     public function setAppId($appId = '') {
         $this->appId = $appId;
         return $this;
@@ -77,6 +82,10 @@ class Config {
         return $this;
     }
 
+    public function setLoggPath($loggerPath = '') {
+        $this->loggerPath = $loggerPath;
+    }
+
     public function getAppId(){
         return $this->appId;
     }
@@ -103,5 +112,9 @@ class Config {
 
     public function getPlatformSerialNumber(){
         return $this->plateformCertSerialNumber;
+    }
+
+    public function getLoggerPath() {
+        return $this->loggerPath;
     }
 }

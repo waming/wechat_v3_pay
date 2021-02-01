@@ -39,6 +39,6 @@ class JsPayRequest extends BaseRequest implements RequestInterface {
             'openid' => $this->getOpenId()
         ];
 
-        return $data;
+        return array_merge($data, $this->getExtendData());
     }
 }
