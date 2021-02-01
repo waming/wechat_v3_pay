@@ -5,8 +5,11 @@
 由于目前很多的项目都是基于v2版本的微信支付，所以自己从新造了一个轮子。 致力于v3版的微信开发
 
 # 实现功能
+
 1.h5统一下单
+
 2.js统下单
+
 3.接受异步回调
 
 # 使用方法
@@ -53,6 +56,10 @@
     $data = $wechatpay->jsPayOrder($jsrequest);
 
 ```
+# 问题
+1.若何获取平台证书？
+https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
+
 
 # 感谢
 欢迎大家提issue和pr
