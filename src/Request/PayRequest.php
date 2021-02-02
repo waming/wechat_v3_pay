@@ -2,7 +2,7 @@
 
 namespace Xiaoming\Wechatpay\Request;
 
-abstract class BaseRequest {
+abstract class PayRequest {
 
     /**
      * 请求应用appid

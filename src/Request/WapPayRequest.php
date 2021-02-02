@@ -5,7 +5,12 @@ namespace Xiaoming\Wechatpay\Request;
 /**
  * 微信支付h5请求类
  */
-class WapPayRequest extends BaseRequest implements RequestInterface {
+class WapPayRequest extends PayRequest implements RequestInterface {
+
+    /**
+     * 请求url
+     */
+    private $requestUrl;
 
     /**
      * 请求ip
@@ -18,6 +23,14 @@ class WapPayRequest extends BaseRequest implements RequestInterface {
 
     public function getIp() {
         return $this->ip;
+    }
+
+    /**
+     * 获取支付网关
+     */
+    public function getRequestUri()
+    {
+        return 'https://api.mch.weixin.qq.com/v3/pay/transactions/h5';
     }
 
     /**

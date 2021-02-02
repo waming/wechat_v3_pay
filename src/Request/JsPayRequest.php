@@ -5,7 +5,7 @@ namespace Xiaoming\Wechatpay\Request;
 /**
  * 微信支付jspay请求类
  */
-class JsPayRequest extends BaseRequest implements RequestInterface {
+class JsPayRequest extends PayRequest implements RequestInterface {
 
     /**
      * openId
@@ -18,6 +18,11 @@ class JsPayRequest extends BaseRequest implements RequestInterface {
 
     public function getOpenId() {
         return $this->openId;
+    }
+
+    public function getRequestUri()
+    {
+        return "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
     }
 
     /**
