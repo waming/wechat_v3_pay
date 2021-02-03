@@ -73,7 +73,7 @@
 
 ``` php
    //获取平台证书. 仅返回第一个平台证书
-   $wechatpay = WechatPay::getClient($config);
+   $wechatpay = WechatPay::getPlatformCert($config);
    echo 'xxx';  //平台证书序列号
    echo 'xxx';  //平台证书，请保存某个文件xx.pem
 ```

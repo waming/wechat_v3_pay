@@ -57,4 +57,10 @@ class TestPay extends TestCase{
         $this->assertNotNull($data);
         $this->assertNotNull($data['prepay_id']);
     }
+
+    public function testCert()
+    {
+        global $config;
+        WechatPay::getPlatformCert($config);
+    }
 }
