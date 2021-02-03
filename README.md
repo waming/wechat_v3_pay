@@ -68,6 +68,16 @@
     $data = $wechatpay->order($jsrequest);
 
 ```
+# 注意
+第一次使用时，建议先获取平台证书，并保存到某个文件中。微信平台不建议硬编码使用。并需要定时更新
+
+``` php
+   //获取平台证书. 仅返回第一个平台证书
+   $wechatpay = WechatPay::getClient($config);
+   echo 'xxx';  //平台证书序列号
+   echo 'xxx';  //平台证书，请保存某个文件xx.pem
+```
+
 # 问题
 1.若何获取平台证书？
 
