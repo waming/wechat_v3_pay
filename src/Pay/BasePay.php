@@ -13,6 +13,7 @@ use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Request;
 use WechatPay\GuzzleMiddleware\Util\AesUtil;
 use NoopValidator;
+use Xiaoming\Wechatpay\Logger;
 
 abstract class BasePay {
 
@@ -83,9 +84,11 @@ abstract class BasePay {
     {
         $request = Request::createFromGlobals();
 
+        Logger::info(print_r($request->getContent(), true));
+
         //检查平台证书序列号
         if($request->headers->get("wechatpay-serial") != $this->config->getPlatformSerialNumber()) {
-            $this->logger->addRecord(200, "error, 平台证书检擦不通过");
+            Logger::error("error, 平台证书检查不通过");
             return [];
         }
 
@@ -107,7 +110,7 @@ abstract class BasePay {
             $retCode = openssl_verify($sign_str, $signature, $publicKey, OPENSSL_ALGO_SHA256);
 
             if($retCode != 1) {
-                $this->logger->addRecord(200, "error, 签名错误");
+                Logger::error("error, 签名错误");
                 return [];
             }
 

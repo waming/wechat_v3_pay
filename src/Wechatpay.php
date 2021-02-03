@@ -13,13 +13,10 @@ class WechatPay {
 
     private $config;
     
-    private $logger;
-
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->logger = new Logger('wechat');
-        $this->logger->pushHandler(new StreamHandler($config->getLoggerPath()), Logger::WARNING);
+        $this->setLogService();
     }
 
     /**
@@ -49,5 +46,15 @@ class WechatPay {
         }
 
         throw new InvalidPayException("{$method} Must Be An Instance Of PayInterface");
+    }
+
+    /**
+     * 配置日志相关
+     */
+    protected function setLogService()
+    {
+        $logger = new Logger('wechat');
+        $logger->pushHandler(new StreamHandler($this->config->getLoggerPath()), Logger::WARNING);
+        \Xiaoming\Wechatpay\Logger::setInstance($logger);
     }
 }
