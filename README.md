@@ -19,9 +19,10 @@
 
 |  method   |   描述       |
 | :-------: | :-------:   |
-|  h5PayOrder  | 手机网站支付 |
-|  jsPayOrder   | jspay支付   |
+|  wapPay  | 手机网站支付 |
+|  jsPay   | jspay支付   |
 |  getCertFile | 获取平台证书 |
+|  notify | 异步通知 |
 
 # 使用方法
 
@@ -42,9 +43,9 @@
             ->setPlatformCertPath(__DIR__.'\platform_cert_1544477311.pem') //平台证书文件路径
             ->setPlatformSerialNumber('xxx') //平台证书序列号
             ->setLoggPath(__DIR__.'wechat.log'); //日志保存路径
-    $wechatpay = new WechatPay($config);
+    $wechatpay = WechatPay::wapPay($config);
 
-    //h5支付
+    //h5统一下单
     $waprequest = new WapPayRequest();
     $waprequest->setMchid($config->getMerchantId());
     $waprequest->setAppId($config->getAppId());
@@ -53,9 +54,9 @@
     $waprequest->setOutTradeOn(date('YmdHis'));
     $waprequest->setNotifyUrl("https://test.com/notify/wechat");
     $waprequest->setIp("127.0.0.1");
-    $data = $wechatpay->h5PayOrder($waprequest);
+    $data = $wechatpay->order($waprequest);
 
-    //js支付
+    //js统一下单
     $jsrequest = new JsPayRequest();
     $jsrequest->setMchid($config->getMerchantId());
     $jsrequest->setAppId($config->getAppId());
@@ -64,7 +65,7 @@
     $jsrequest->setOutTradeOn(date('YmdHis'));
     $jsrequest->setNotifyUrl("https://test.com/notify/wechat");
     $jsrequest->setOpenId('xxx'); //openid
-    $data = $wechatpay->jsPayOrder($jsrequest);
+    $data = $wechatpay->order($jsrequest);
 
 ```
 # 问题
