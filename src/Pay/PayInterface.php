@@ -34,8 +34,8 @@ interface PayInterface {
 
     /**
      * 申请退款接口
-     * todo
      */
+    public function refund($requestInterface);
 
     /**
      * 查询单笔退款

@@ -3,11 +3,11 @@
 namespace Xiaoming\Wechatpay\Tests;
 
 require_once __DIR__ . '/Config.php';
-define("ROOT_PATH", dirname(__DIR__) . "/");
 
 use PHPUnit\Framework\TestCase;
 use Xiaoming\Wechatpay\Config;
 use Xiaoming\Wechatpay\Request\JsPayRequest;
+use Xiaoming\Wechatpay\Request\RefundRequest;
 use Xiaoming\Wechatpay\Request\WapPayRequest;
 use Xiaoming\Wechatpay\WechatPay;
 
@@ -62,5 +62,35 @@ class TestPay extends TestCase{
     {
         global $config;
         WechatPay::getPlatformCert($config);
+    }
+
+    public function testRefund()
+    {
+        global $config;
+        $pay = WechatPay::wapPay($config);
+
+        $outrefundno = 'REFUND'.date('YmdHis');
+        $refundRequest = new RefundRequest();
+        $refundRequest->setTransactionId('4200000998202103171886095327');
+        // $refundRequest->setOutTradeNo($outtrandeno);
+        $refundRequest->setOutRefundNo($outrefundno);
+        $refundRequest->setReason('测试退款');
+        $refundRequest->setNotifyUrl('https://channel.test.com/notify/refund');
+        $refundRequest->setRefundFee(1);
+        $refundRequest->setTotalFee(1);
+
+
+        $data = $refundRequest->getRequestData();
+
+        $this->assertNotNull($data['transaction_id']);
+        $this->assertEquals($data['transaction_id'], '4200000998202103171886095327', 'okokok');
+
+        $data = $pay->refund($refundRequest);
+
+        $this->assertNotNull($data);
+        $this->assertNotNull($data['refund_id']);
+        $this->assertEquals($outrefundno, $data['out_refund_no']);
+        $this->assertNotNull($data['channel']);
+        $this->assertNotNull($data['status']);
     }
 }

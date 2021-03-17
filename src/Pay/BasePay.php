@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use WechatPay\GuzzleMiddleware\Util\AesUtil;
 use NoopValidator;
 use Xiaoming\Wechatpay\Logger;
+use Xiaoming\Wechatpay\Request\RefundRequest;
 
 abstract class BasePay {
 
@@ -125,5 +126,18 @@ abstract class BasePay {
         } catch (RequestException $e) {
             throw new \RuntimeException($e->getMessage());
         } 
+    }
+
+    /**
+     * 申请退款接口
+     * @param RefundRequest $refundRequest
+     */
+    public function refund($refundRequest)
+    {
+        if(! $refundRequest instanceof RefundRequest) {
+            throw new InvalidPayException("ERROR REQUEST, must instaof RefundRequest");
+        }
+
+        return $this->request($refundRequest);
     }
 }
