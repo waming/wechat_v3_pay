@@ -12,9 +12,9 @@ use Xiaoming\Wechatpay\Request\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Request;
 use WechatPay\GuzzleMiddleware\Util\AesUtil;
-use NoopValidator;
 use Xiaoming\Wechatpay\Logger;
 use Xiaoming\Wechatpay\Request\RefundRequest;
+use Xiaoming\Wechatpay\Request\RefundInfoRequest;
 
 abstract class BasePay {
 
@@ -79,6 +79,34 @@ abstract class BasePay {
     }
 
     /**
+     * get 请求
+     */
+    protected function getRequest($request) 
+    {
+        if(! $request instanceof RequestInterface) {
+            throw new InvalidPayException("ERROR Request! Request must implements RequestInterface");
+        }
+
+        $data = $request->getRequestData();
+
+        try {
+            $resp = $this->getClient()->request('GET', 
+                $request->getRequestUri(), [ // 注意替换为实际URL
+                'headers' => [ 'Accept' => 'application/json' ],
+            ]);
+        
+            $result = json_decode($resp->getBody(), true);
+
+            return $result;
+        
+        } catch (RequestException $e) {
+           
+            throw new \RuntimeException($e->getMessage());
+        }
+
+    }
+
+    /**
      * 异步通知
      */
     public function notify()
@@ -139,5 +167,17 @@ abstract class BasePay {
         }
 
         return $this->request($refundRequest);
+    }
+
+    /**
+     * 单笔退款查询接口
+     */
+    public function refundInfo($refundInfoRequest)
+    {
+        if(! $refundInfoRequest instanceof RefundInfoRequest) {
+            throw new InvalidPayException("ERROR REQUEST, must instaof RefundRequest");
+        }
+
+        return $this->getRequest($refundInfoRequest);
     }
 }

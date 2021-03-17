@@ -7,6 +7,7 @@ require_once __DIR__ . '/Config.php';
 use PHPUnit\Framework\TestCase;
 use Xiaoming\Wechatpay\Config;
 use Xiaoming\Wechatpay\Request\JsPayRequest;
+use Xiaoming\Wechatpay\Request\RefundInfoRequest;
 use Xiaoming\Wechatpay\Request\RefundRequest;
 use Xiaoming\Wechatpay\Request\WapPayRequest;
 use Xiaoming\Wechatpay\WechatPay;
@@ -92,5 +93,16 @@ class TestPay extends TestCase{
         $this->assertEquals($outrefundno, $data['out_refund_no']);
         $this->assertNotNull($data['channel']);
         $this->assertNotNull($data['status']);
+    }
+
+    public function testRefundInfo()
+    {
+        global $config;
+        $pay = WechatPay::wapPay($config);
+
+        $request = new RefundInfoRequest();
+        $request->setOutRefundNo('REFUND'.date('YmdHis'));
+        $data = $pay->refundInfo($request);
+        $this->assertNotNull($data);
     }
 }
