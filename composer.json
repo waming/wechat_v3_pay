@@ -1,6 +1,6 @@
 {
     "name": "xming/wechat_v3_pay",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "wechat pay version 3",
     "type": "library",
     "authors": [
