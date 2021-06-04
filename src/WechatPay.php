@@ -7,8 +7,17 @@ namespace Xiaoming\Wechatpay;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Xiaoming\Wechatpay\Exceptions\InvalidPayException;
+use Xiaoming\Wechatpay\Pay\GetPlatformCert;
+use Xiaoming\Wechatpay\Pay\JsPay;
 use Xiaoming\Wechatpay\Pay\PayInterface;
+use Xiaoming\Wechatpay\Pay\WapPay;
 
+
+/**
+ * @method static WapPay wapPay(Config $config)
+ * @method static JsPay jsPay(Config $config)
+ * @method static GetPlatformCert getPlatformCert(Config $config)
+ */
 class WechatPay {
 
     private $config;

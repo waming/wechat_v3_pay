@@ -4,3 +4,4 @@ src/tests/apiclient_key_1544477311.pem
 src/tests/platform_cert_1544477311.pem
 src/tests/Config.php
 composer.lock
+/.idea
